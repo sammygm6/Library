@@ -1,9 +1,7 @@
 #include "libro.h"
-#include <string>
 
-using std::string;
 
-libro::libro(,int){
+libro::libro(){
 
 }
 libro::libro(){

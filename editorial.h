@@ -3,8 +3,8 @@
 class editorial
 {
 	int ID;
-	char[10] nombre;
-	char[10] direccion;
+	char* nombre;
+	char* direccion;
 public:
 	editorial();
 	~editorial();
