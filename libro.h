@@ -5,20 +5,20 @@ using std::string;
 
 class libro
 {
-	string id;
-	string nombre;
-	string autor;
+	char[10] id;
+	char[10] nombre;
+	char[10] autor;
 	int idEditorial;
 public:
 	libro(string,string,string,int);
 	libro();
 	~libro();
-	string getID();
-	string getNombre();
-	string getAutor();
+	char[10] getID();
+	char[10] getNombre();
+	char[10] getAutor();
 	int getidEditorial();
-	void setID(const string);
-	void setNombre(const string);
-	void setAutor(const string);
+	void setID(const char[10]);
+	void setNombre(const char[10]);
+	void setAutor(const char[10]);
 	void setIDEditorial(const int);
 };

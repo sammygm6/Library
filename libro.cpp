@@ -3,7 +3,7 @@
 
 using std::string;
 
-libro::libro(string,string,string,int){
+libro::libro(,int){
 
 }
 libro::libro(){
