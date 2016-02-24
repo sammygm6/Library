@@ -1,33 +1,36 @@
 #include "libro.h"
 
 
-libro::libro(){
-
+libro::libro(char* id,char* nombre,char* autor,int idEditorial){
+	this->id = id;
+	this->nombre = nombre;
+	this->autor = autor;
+	this->idEditorial = idEditorial;
 }
 libro::libro(){
-
+//do nothingg
 }
-string libro::getID(){
-
+char* libro::getID(){
+	return this->id;
 }
-string libro::getNombre(){
-
+char* libro::getNombre(){
+	return this->nombre;
 }
-string libro::getAutor(){
-
+char* libro::getAutor(){
+	return this->autor;
 }
 int libro::getidEditorial(){
+	return this->idEditorial;
+}
+void libro::setID(char* id){
 
 }
-void libro::setID(string){
-
+void libro::setNombre(char* nombre){
+	this->nombre = nombre;
 }
-void libro::setNombre(string){
-
+void libro::setAutor(char* autor){
+	this->autor = autor;
 }
-void libro::setAutor(string){
-
-}
-void libro::setIDEditorial(int){
-
+void libro::setIDEditorial(int idEditorial){
+	this->idEditorial = idEditorial;
 }

@@ -10,7 +10,7 @@ class libro
 	char* autor;
 	int idEditorial;
 public:
-	libro(string,string,string,int);
+	libro(char*,char*,char*,int);
 	libro();
 	char* getID();
 	char* getNombre();
