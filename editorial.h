@@ -2,16 +2,16 @@
 
 class editorial
 {
-	int ID;
+	int id;
 	char* nombre;
 	char* direccion;
 public:
+	editorial(int,char*,char*);
 	editorial();
-	~editorial();
 	int getID();
 	char* getNombre();
 	char* getDireccion();
-	void setID(const int);
-	void setNombre(const char*);
-	void setDireccion(const char*);
+	void setID(int);
+	void setNombre(char*);
+	void setDireccion(char*);
 };

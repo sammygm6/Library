@@ -4,8 +4,8 @@ exe:	editorial.o libro.o
 editorial.o:	editorial.cpp
 		g++ -c editorial.cpp
 
-libro.o:		libro.cpp
+libro.o:	libro.cpp
 		g++ -c libro.cpp
 
 clean:
-		rm *.o 
+		rm *.o

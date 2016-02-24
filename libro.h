@@ -1,7 +1,4 @@
 #pragma once
-#include <string>
-
-using std::string;
 
 class libro
 {
@@ -16,8 +13,13 @@ public:
 	char* getNombre();
 	char* getAutor();
 	int getidEditorial();
-	void setID(const char*);
-	void setNombre(const char*);
-	void setAutor(const char*);
-	void setIDEditorial(const int);
+	void setID(char*);
+	void setNombre(char*);
+	void setAutor(char*);
+	void setIDEditorial(int);
 };
+int main()
+{
+	/* code */
+	return 0;
+}
