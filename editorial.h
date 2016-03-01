@@ -1,17 +1,18 @@
 #pragma once
+#import <string>
 
 class editorial
 {
 	int id;
-	char* nombre;
-	char* direccion;
+	string nombre;
+	string direccion;
 public:
-	editorial(int,char*,char*);
+	editorial(int,string,string);
 	editorial();
 	int getID();
-	char* getNombre();
-	char* getDireccion();
+	string getNombre();
+	string getDireccion();
 	void setID(int);
-	void setNombre(char*);
-	void setDireccion(char*);
+	void setNombre(string);
+	void setDireccion(string);
 };

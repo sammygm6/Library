@@ -1,7 +1,7 @@
 #include "editorial.h"
+#include <string>
 
-
-editorial::editorial(int id,char* nombre,char* direccion){
+editorial::editorial(int id,string nombre,string direccion){
 	this->id = id;
 	this->nombre = nombre;
 	this->direccion = direccion;
@@ -12,18 +12,18 @@ editorial::editorial(){
 int editorial::getID(){
 	return this->id;
 }
-char* editorial::getNombre(){
+string editorial::getNombre(){
 	return this->nombre;
 }
-char* editorial::getDireccion(){
+string editorial::getDireccion(){
 	return this->direccion;
 }
 void editorial::setID(int id){
 	this-> id = id;
 }
-void editorial::setNombre(char* nombre){
+void editorial::setNombre(string nombre){
 	this->nombre = nombre;
 }
-void editorial::setDireccion(char* direccion){
+void editorial::setDireccion(string direccion){
 	this->direccion = direccion;
 }

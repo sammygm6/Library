@@ -2,19 +2,19 @@
 
 class libro
 {
-	char* id;
-	char* nombre;
-	char* autor;
+	string id;
+	string nombre;
+	string autor;
 	int idEditorial;
 public:
-	libro(char*,char*,char*,int);
+	libro(string,string,string,int);
 	libro();
-	char* getID();
-	char* getNombre();
-	char* getAutor();
+	string getID();
+	string getNombre();
+	string getAutor();
 	int getidEditorial();
-	void setID(char*);
-	void setNombre(char*);
-	void setAutor(char*);
+	void setID(string);
+	void setNombre(string);
+	void setAutor(string);
 	void setIDEditorial(int);
 };
