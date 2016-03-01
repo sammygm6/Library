@@ -3,8 +3,6 @@
 # include <iomanip>
 
 using std::stringstream;
-using std::setw;
-using std::setfill;
 
 Record::Record(vector<Field> fields, vector<string> records){
 	this->campos = fields;
