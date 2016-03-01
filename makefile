@@ -1,5 +1,8 @@
-exe:	editorial.o libro.o
-		g++ editorial.o libro.o -o exe
+exe:	main.o editorial.o libro.o
+		g++ main.o editorial.o libro.o -o exe
+
+main.o:	main.cpp
+		g++ -c main.cpp
 
 editorial.o:	editorial.cpp
 		g++ -c editorial.cpp
@@ -9,3 +12,4 @@ libro.o:	libro.cpp
 
 clean:
 		rm *.o
+		rm exe

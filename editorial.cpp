@@ -27,8 +27,3 @@ void editorial::setNombre(char* nombre){
 void editorial::setDireccion(char* direccion){
 	this->direccion = direccion;
 }
-int main()
-{
-	/* code */
-	return 0;
-}

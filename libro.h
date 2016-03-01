@@ -18,8 +18,3 @@ public:
 	void setAutor(char*);
 	void setIDEditorial(int);
 };
-int main()
-{
-	/* code */
-	return 0;
-}
