@@ -42,12 +42,11 @@ bool Field::isKey()const{
 }
 string Field::toString()const{
 	ostringstream ss;
-	/*
 	ss << setw(FIELD_LENGTH) << setfill('_') << this->getName()
 	<< setw(DATA_TYPE_LENGTH) << this->getDataType()
 	<< setw(LENGTH_LENGTH) << setfill('0') << this->getSize()
 	<< setw(DECIMAL_PLACES_LENGTH) << setfill('0') << this->getDecimalSize()
 	<< setw(KEY_LENGTH) << this->isKey() ? '1' : '0';
-	*/
+
 	return ss.str();
 }

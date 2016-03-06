@@ -3,6 +3,8 @@
 # include <iomanip>
 
 using std::stringstream;
+using std::setw;
+using std::setfill;
 
 Record::Record(vector<Field> fields, vector<string> records){
 	this->campos = fields;
@@ -37,7 +39,9 @@ string Record::toString()const{
 	}else{
 		for (int i = 0; i < campos.size(); i++){
 			Field curr_f = campos[i];
-			ss << "__________" + records[i];
+			char fill = '_';
+
+			ss << setw(curr_f.getSize()) << setfill(fill) << records[i];
 		}
 		return ss.str();
 
