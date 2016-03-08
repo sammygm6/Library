@@ -7,6 +7,7 @@
 # include "Field.h"
 # include "index.h"
 # include <ctime>
+#include <iostream>
 
 using namespace std;
 int interface_main(Menu, int);
@@ -15,23 +16,28 @@ string generarNombreLibro();
 string generarIDLibro();
 string generarIDEditorialLibro();
 string generarAutorLibro();
+string generarIDEditorial();
+string generarDireccionEditorial();
+string generarNombreEditorial();
 
-int cont_registros = 1;
+int cont_registros = 0;
+int cont_editoriales = 0;
 long int cont_ISBN = 999999999;
 recordFile current_open_file;//referencia archivo abierto
+vector<string> libros_multiple;
+vector<string> editoriales_multiple;
 
 int main(int argc, char const *argv[]){
 	srand(time(0));
 	Menu menu;	
-	initscr();	
+	initscr();
 	move(0, 0);
-	printw("Desea ejecutar el programa cargando mil registros?\n1.Si\n2.No\n");
+	printw("Desea ejecutar el programa cargando 5 mil registros?\n1.Si\n2.No\n");
 	refresh();
 	int opc = atoi(getstring().c_str());
 	vector<Field> fields;
 	vector<string> campos;	
 	int orden = 7;
-	//Arbol arbolRecord(orden);
 	Record record;
 	current_open_file.setRecord(record);
 	bool TTRecord = false;	
@@ -45,16 +51,46 @@ int main(int argc, char const *argv[]){
 			refresh();
 		}
 		if(opc == 1){
-			ofstream myfile;
-			myfile.open("Libros.txt");
-			for (int i = 0; i < 1000; i++){
-				myfile << generarIDLibro() << "," << generarNombreLibro() << "," << generarAutorLibro() << "," << generarIDEditorialLibro() << ",";
+			ofstream myfile("Libros.bin");
+			for (int i = 0; i < 5000; i++){
+				string idLibro = generarIDLibro();
+				string nombreLibro = generarNombreLibro();
+				string autorLibro = generarAutorLibro();
+				string idEditorialLibro = generarIDEditorialLibro();
+				myfile << idLibro << "," << nombreLibro << "," << autorLibro << "," << idEditorialLibro << ",";
+
+
+
+
+
+				libros_multiple.push_back(idLibro);
+				libros_multiple.push_back(nombreLibro);
+				libros_multiple.push_back(autorLibro);
+				libros_multiple.push_back(idEditorialLibro);
+
+				
 			}
 			myfile.close();
+			ofstream myfile2("Editoriales.bin");
+			for (int i = 0; i < 5000; i++)
+			{
+				string idEditorial = generarIDEditorial();
+				string nombreEditorial = generarNombreEditorial();
+				string direccionEditorial = generarDireccionEditorial();
+				myfile2 << idEditorial << "," << nombreEditorial << "," << direccionEditorial << ",";
+
+
+
+				editoriales_multiple.push_back(idEditorial);
+				editoriales_multiple.push_back(nombreEditorial);
+				editoriales_multiple.push_back(direccionEditorial);
+
+			}
+			myfile2.close();
 			TTRecord = true;
 			current_open_file.setFlagTTRecords(TTRecord);
 			move(0, 55);
-			printw("File loaded: Personas.txt");
+			printw("File loaded: Libros.txt");
 			refresh();
 			move(23, 0);
 			printw("Debera de cargar el archivo para fabricar el binario....");
@@ -135,7 +171,7 @@ int main(int argc, char const *argv[]){
 				default:
 					clear();
 					move(0, 29);
-					printw("...CARGAR 10 MIL REGISTROS...");
+					printw("...CARGAR REGISTRO...");
 					move(2, 0);
 					if(current_open_file.fs.is_open()){
 						current_open_file.fs.close();
@@ -230,7 +266,6 @@ int main(int argc, char const *argv[]){
 				break;
 				case 1:
 				current_open_file.listFields();
-
 				break;
 				case 2:
 
@@ -243,13 +278,119 @@ int main(int argc, char const *argv[]){
 			clear();
 			string file_name;
 			string id_search;
+			string id_update;
 			string id_delete;
 			long key;
 			long id;
 			int rrn;
 			opc_returned = interface_main(menu, 4);			
 			if(opc_returned == 0){				
-					current_open_file.addRecord(record);
+				current_open_file.addRecord(record);
+			}else if(opc_returned == 1){//Modificar record
+				clear();
+				move(0, 29);
+				printw("...PANEL DE MODIFICACION DE REGISTROS...");
+				move(2, 0);
+				printw("Ingrese el 1 para Libro , 2 para Editorial: ");
+				refresh();
+				id_update = getstring();
+				id = atoi(id_update.c_str());
+				clear();
+				if (id == 1)
+				{
+					string id_libro;
+					move(0,29);
+					printw("Ingrese el id del Libro que desea modificar");
+					refresh();
+					id_libro = getstring();
+					clear();
+					for (int i = 0; i < libros_multiple.size(); i++)
+					{
+						if (libros_multiple.at(i) == id_libro)
+						{
+							string id = libros_multiple.at(i);
+							string nombre = libros_multiple.at(i+1);
+							string autor = libros_multiple.at(i+2);
+							string idEditorial = libros_multiple.at(i+3);
+							move(0,20);
+							printw("Se encontro el registro!");
+							move(5,5);
+							printw(id.c_str());
+							move(6,5);
+							printw(nombre.c_str());
+							move(7,5);
+							printw(autor.c_str());
+							move(8,5);
+							printw(idEditorial.c_str());
+							getch();
+							clear();
+							move(5,15);
+							printw("Ingrese el nuevo nombre: ");
+							nombre = getstring();
+							move(6,15);
+							printw("Ingrese el nuevo id: ");
+							id = getstring();
+							move(7,15);
+							printw("Ingrese nuevo Autor");
+							autor = getstring();
+							move(8,15);
+							printw("Ingrese nuevo Id Editorial");
+							idEditorial = getstring();
+							getch();
+							clear();
+							move(0,30);
+							printw("Exito");
+							getch();
+							clear();
+							break;
+
+						}
+					}
+				}else if(id == 2)
+				{
+					move(2, 0);
+					printw("Ingrese el ID del Editorial a buscar: ");
+					refresh();
+					id_search = getstring();
+					clear();
+					for (int i = 0; i < editoriales_multiple.size(); i++)
+					{
+						if (editoriales_multiple.at(i) == id_search)
+						{
+							string id = editoriales_multiple.at(i);
+							string nombre = editoriales_multiple.at(i+1);
+							string direccion = editoriales_multiple.at(i+2);
+							move(0,20);
+							printw("Se encontro el registro!");
+							move(5,5);
+							printw(id.c_str());
+							move(6,5);
+							printw(nombre.c_str());
+							move(7,5);
+							printw(direccion.c_str());
+							getch();
+							clear();
+							move(5,15);
+							printw("Ingrese el nuevo nombre: ");
+							nombre = getstring();
+							move(6,15);
+							printw("Ingrese el nuevo id: ");
+							id = getstring();
+							move(7,15);
+							printw("Ingrese nueva Direccion");
+							direccion = getstring();
+							getch();
+							clear();
+							move(0,30);
+							printw("Exito");
+							getch();
+							clear();
+							break;
+
+						}
+					}
+				}
+
 			}else if(opc_returned == 2){//borrar record
 				clear();
 				move(0, 29);
@@ -259,15 +400,153 @@ int main(int argc, char const *argv[]){
 				refresh();
 				id_delete = getstring();
 				id = atol(id_delete.c_str());
-				current_open_file.borrarRecord(id);
+				//current_open_file.borrarRecord(id);
+				move(5,20);
+				printw("1.Libro");
+				move(6,20);
+				printw("2.Editorial");
+				string opcion = getstring();
+				clear();
+				int op = atoi(opcion.c_str());
+				if(op == 1)
+				{
+					move(2, 0);
+					printw("Ingrese el ID del Libro a buscar: ");
+					refresh();
+					id_search = getstring();
+					clear();
+					for (int i = 0; i < libros_multiple.size(); i++)
+					{
+						if (libros_multiple.at(i) == id_search)
+						{
+							string id = libros_multiple.at(i);
+							string nombre = libros_multiple.at(i+1);
+							string autor = libros_multiple.at(i+2);
+							string idEditorial = libros_multiple.at(i+3);
+							move(0,20);
+							printw("Se encontro el registro!\nPresione Enter para borrarlo");
+							move(5,5);
+							printw(id.c_str());
+							move(6,5);
+							printw(nombre.c_str());
+							move(7,5);
+							printw(autor.c_str());
+							move(8,5);
+							printw(idEditorial.c_str());
+							getch();
+							clear();
+							break;
+
+						}
+					}
+				}else if(op == 2)
+				{
+					move(2, 0);
+					printw("Ingrese el ID del Editorial a buscar: ");
+					refresh();
+					id_search = getstring();
+					clear();
+					for (int i = 0; i < editoriales_multiple.size(); i++)
+					{
+						if (editoriales_multiple.at(i) == id_search)
+						{
+							string id = editoriales_multiple.at(i);
+							string nombre = editoriales_multiple.at(i+1);
+							string direccion = editoriales_multiple.at(i+2);
+							move(0,20);
+							printw("Se encontro el registro!\nPresione Enter para borrarlo");
+							move(5,5);
+							printw(id.c_str());
+							move(6,5);
+							printw(nombre.c_str());
+							move(7,5);
+							printw(direccion.c_str());
+							getch();
+							clear();
+							break;
+
+						}
+					}
+				}
 			}else if(opc_returned == 3){//busqueda de record				
 				clear();
 				move(0, 29);
-				printw("...BUSQUEDA DE REGISTROS CON ARBOL B...");
+				printw("...BUSQUEDA DE REGISTROS...");
+				move(5,20);
+				printw("1.Libro");
+				move(6,20);
+				printw("2.Editorial");
+				string opcion = getstring();
+				clear();
+				int op = atoi(opcion.c_str());
+				if(op == 1)
+				{
+					move(2, 0);
+					printw("Ingrese el ID del Libro a buscar: ");
+					refresh();
+					id_search = getstring();
+					clear();
+					for (int i = 0; i < libros_multiple.size(); i++)
+					{
+						if (libros_multiple.at(i) == id_search)
+						{
+							string id = libros_multiple.at(i);
+							string nombre = libros_multiple.at(i+1);
+							string autor = libros_multiple.at(i+2);
+							string idEditorial = libros_multiple.at(i+3);
+							move(0,20);
+							printw("Se encontro el registro!");
+							move(5,5);
+							printw(id.c_str());
+							move(6,5);
+							printw(nombre.c_str());
+							move(7,5);
+							printw(autor.c_str());
+							move(8,5);
+							printw(idEditorial.c_str());
+							getch();
+							clear();
+							break;
+
+						}
+					}
+				}else if(op == 2)
+				{
+					move(2, 0);
+					printw("Ingrese el ID del Editorial a buscar: ");
+					refresh();
+					id_search = getstring();
+					clear();
+					for (int i = 0; i < editoriales_multiple.size(); i++)
+					{
+						if (editoriales_multiple.at(i) == id_search)
+						{
+							string id = editoriales_multiple.at(i);
+							string nombre = editoriales_multiple.at(i+1);
+							string direccion = editoriales_multiple.at(i+2);
+							move(0,20);
+							printw("Se encontro el registro!");
+							move(5,5);
+							printw(id.c_str());
+							move(6,5);
+							printw(nombre.c_str());
+							move(7,5);
+							printw(direccion.c_str());
+							getch();
+							clear();
+							break;
+
+						}
+					}
+				}
+			}else if(opc_returned == 4){////////////////////////LISTAR
+				clear();
+				move(0, 29);
+				printw("...Listar registros...");
 				move(2, 0);
-				printw("Ingrese el ID de la persona a buscar: ");
-				refresh();
-				id_search = getstring();
+				printw("Nombre del archivo: ");
+				file_name = getstring();
+				//current_open_file.listRecords(file_name);
 				/*key = atol(id_search.c_str());
 				rrn = arbolRecord.buscar((long)key);
 				if(rrn != -1){
@@ -280,14 +559,50 @@ int main(int argc, char const *argv[]){
 					refresh();
 					getch();
 				}*/
-			}else if(opc_returned == 4){
+					/*key = atol(id_search.c_str());
+				rrn = arbolRecord.buscar((long)key);
+				if(rrn != -1){
+					current_open_file.buscarRecordArbol(arbolRecord.buscar((long)key));
+				}else{
+					move(22, 0);
+					printw("No se encontro el registro!!!");
+					move(23, 0);
+					printw("Presiones cualquier tecla para continuar");
+					refresh();
+					getch();
+				}*/
+					/*key = atol(id_search.c_str());
+				rrn = arbolRecord.buscar((long)key);
+				if(rrn != -1){
+					current_open_file.buscarRecordArbol(arbolRecord.buscar((long)key));
+				}else{
+					move(22, 0);
+					printw("No se encontro el registro!!!");
+					move(23, 0);
+					printw("Presiones cualquier tecla para continuar");
+					refresh();
+					getch();
+				}*/
+				string salida = "";
+				int contador = 0;
 				clear();
-				move(0, 29);
-				printw("...Listar registros...");
-				move(2, 0);
-				printw("Nombre del archivo: ");
-				file_name = getstring();
-				current_open_file.listRecords(file_name);
+				scrollok(stdscr,true);
+				for (int i = 0; i < libros_multiple.size(); i++)
+				{
+					if (contador == 3)
+					{
+						move(i,10);
+						printw(libros_multiple.at(i).c_str());
+						contador = 0;
+					}else
+					{
+						move(i,10);
+						printw(libros_multiple.at(i).c_str());
+					}
+					contador++;
+					refresh();
+				}
+				getch();
 			}
 
 		}else if(opc_returned == 3){//index_menu
@@ -394,10 +709,9 @@ string getstring(){
 
 string generarNombreLibro(){
 	string name;
-	string nombres[11] = {"Cien Años de Soledad", "Harry Potter", "El Principito", 
-	"El alquimista", "El Perfume", "El Señor de los anillos", "Angeles", "Demonios", "Danilo", "Iliada", 
-	"El conde"};
-//	srand(time(0));
+	string nombres[11] = {"Cien_Años_de_Soledad", "Harry_Potter", "El_Principito", 
+	"El_alquimista", "El_Perfume", "El_Señor_de_los_anillos", "Angeles", "Demonios", "Danilo", "Iliada", 
+	"El_conde"};
 	stringstream ss;
 	ss << nombres[rand()%11];
 	name = ss.str();
@@ -405,23 +719,37 @@ string generarNombreLibro(){
 	return name;
 }
 
+string generarNombreEditorial(){
+	string name;
+	string nombres[11] = {"Mayores","La_Mejor_Editorial","RecordBest","BestStoreEver","MejoresEditoriales","Yale",
+	"EditorialONE","PeorEditorial","CachimbodeLetras","LaPeorEditorial","EditorialMundial"};
+	stringstream ss;
+	ss << nombres[rand()%11];
+	name = ss.str();
+	return name;
+}
+
 string generarIDLibro(){//ISBN
 	cont_ISBN++;
 	string id;
-	//srand(time(0));
 	stringstream ss;
 	ss << cont_ISBN;
 	id  = ss.str();
-	cont_registros++;
+	return id;
+}
+
+string generarIDEditorial(){
+	cont_editoriales++;
+	string id;
+	stringstream ss;
+	ss << cont_editoriales;
+	id = ss.str();
 	return id;
 }
 
 string generarAutorLibro(){
 	string name;
-	string nombres[11] = {"Cien Años de Soledad", "Harry Potter", "El Principito", 
-	"El alquimista", "El Perfume", "El Señor de los anillos", "Angeles", "Demonios", "Danilo", "Iliada", 
-	"El conde"};
-//	srand(time(0));
+	string nombres[11] = {"Carlos", "Melvin", "Christian","Denzel","Oswaldo","Angelica","Yefferson","Brian","Danilo","Daniel","Samuel"};
 	stringstream ss;
 	ss << nombres[rand()%11];
 	name = ss.str();
@@ -430,14 +758,22 @@ string generarAutorLibro(){
 }
 
 string generarIDEditorialLibro(){
-	string name;
-	string nombres[11] = {"Carlos", "Melvin", "Christian", 
-	"Denzel", "Oswaldo", "Angelica", "Yefferson", "Brian", "Danilo", "Daniel", 
-	"Samuel"};
-	//srand(time(0));
+	string id;
+	cont_registros++;
 	stringstream ss;
-	ss << nombres[rand()%10];
-	name = ss.str();
+	ss << cont_registros;
+	id = ss.str();
 
-	return name;
+	return id;
+}
+
+string generarDireccionEditorial(){
+	string direccion;
+	string direcciones[11] = {"Col_LaLoma","La_Tigra","LaPena","La_Vega","Olimpia","New_Heaven","Altos_Del_Caribe",
+	"Bradenton","Miami","Orlando","Texas"};
+	stringstream ss;
+	ss << direcciones[rand()%11];
+	direccion = ss.str();
+
+	return direccion;
 }

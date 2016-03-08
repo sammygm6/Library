@@ -8,7 +8,6 @@
 # include "Field.h"
 # include "Record.h"
 # include "index.h"
-//# include "primaryindex.h"
 
 using namespace std;
 
@@ -31,9 +30,8 @@ public:
 	int getField_Length();
 	void setRecord(Record);
 	void listFields();
-	void buscarRecordArbol(int rrn);
-	void borrarRecord(long key/*, Arbol*/);
-	//void crearArbol(Arbol);
+	void buscarRecord(int rrn);
+	void borrarRecord(long key);
 	void listRecords(string);
 	void setInputRecord(char*);
 	bool open(string = "", ios_base::openmode = ios_base::in | ios_base::out);

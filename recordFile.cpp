@@ -148,8 +148,9 @@ void recordFile::setRecord(Record r){
 }
 
 void recordFile::recordToBinary(){		
-	ifstream personRecord("Personas.txt");		
-	ofstream outputFile(registryName.c_str());
+	ifstream personRecord(registryName.c_str());
+	string nombre = registryName +"BINARIO";		
+	ofstream outputFile(nombre.c_str(),ios::out | ios::binary);
 	vector<Field> fields = this->record.campos;
 	int size_field = 0;
 	outputFile.seekp(0);	
@@ -159,10 +160,10 @@ void recordFile::recordToBinary(){
 	outputFile.write(reinterpret_cast<char*>(&size_field), sizeof(int));
 	char EndOfFile;
 	if(flatTTRecord == true){
-		Field campo1("ID", INT_DATA, 10, 255, true);
+		Field campo1("ID", INT_DATA, 12, 255, true);
 		Field campo2("Nombre", STRING_DATA, 40, 255, false);
-		Field campo3("Edad", INT_DATA, 4, 255, false);
-		Field campo4("Pais", STRING_DATA, 32, 255, false);
+		Field campo3("Autor", STRING_DATA, 40, 255, false);
+		Field campo4("IDEditorial", STRING_DATA, 12, 255, false);
 		record.campos.push_back(campo1);
 		record.campos.push_back(campo2);
 		record.campos.push_back(campo3);
@@ -176,41 +177,40 @@ void recordFile::recordToBinary(){
 		outputFile.write(reinterpret_cast<char*>(&size_field), sizeof(int));
 		while(personRecord>>EndOfFile){
 			char name[40];		
-			char idPerson[10];		
-			char age[4];		
-			char country[32];
-			string temp_name = "", temp_id = "" , temp_age = "", temp_country = "";
-			getline(personRecord, temp_name, ',');			
-			getline(personRecord, temp_id, ',');				
-			getline(personRecord, temp_age, ',');			
-			getline(personRecord, temp_country, ',');			
+			char id[12];		
+			char autor_[40];		
+			char id_editorial[12];
+			string temp_name = "", temp_id = "" , temp_autor = "", temp_id_editorial = "";
+			getline(personRecord, temp_name, ',');
+			getline(personRecord, temp_id, ',');			
+			getline(personRecord, temp_autor, ',');
+			getline(personRecord, temp_id_editorial, ',');
 			for (int i = 0; i < sizeof(name); i++){
 				name[i] = temp_name[i];
 			}
-			for (int i = 0; i < sizeof(idPerson); i++){
-				idPerson[i] = temp_id[i];
+			for (int i = 0; i < sizeof(id); i++){
+				id[i] = temp_id[i];
 			}		
-			for (int i = 0; i < sizeof(age); i++){
-				age[i] = temp_age[i];
+			for (int i = 0; i < sizeof(autor_); i++){
+				autor_[i] = temp_autor[i];
 			}
-			for (int i = 0; i < sizeof(country); i++){
-				country[i] = temp_country[i];
+			for (int i = 0; i < sizeof(id_editorial); i++){
+				id_editorial[i] = temp_id_editorial[i];
 			}
 			bool cadenaVacia = true;
 			for (int i = 0; i < sizeof(name); i++){
 				if(name[i] != '\0' && name[i] != ' ')
 					cadenaVacia = false;
 			}			
-			if(!cadenaVacia){				
-				outputFile.write((char*)idPerson, sizeof(idPerson));
-				outputFile.write((char*)name, sizeof(name));			
-				outputFile.write((char*)age, sizeof(age));
-				outputFile.write((char*)country, sizeof(country));
+			if(!cadenaVacia){
+				outputFile.write((char*)id, sizeof(id));
+				outputFile.write((char*)name, sizeof(name));
+				outputFile.write((char*)autor_, sizeof(autor_));
+				outputFile.write((char*)id_editorial, sizeof(id_editorial));
 				recordNumber++;
 				outputFile.seekp(0);
 		  		outputFile.seekp (sizeof(bool)+sizeof(int));
 		  		outputFile.write(reinterpret_cast<char*>(&recordNumber), sizeof(recordNumber));
-		  		//outputFile.seekp(sizeof(int)*2 +1 +(recordNumber*86));
 			}			
 		}		
 
@@ -271,10 +271,10 @@ void recordFile::indexRecord(){ //funcion para los indices del registro
 			stringstream rrn ;
 			if(readFile.eof())
 				break;
-			char idPerson[10];
-			char name[32];
+			char idPerson[12];
+			char name[40];
 			char age[4];
-			char country[32];
+			char country[12];
 			readFile.read((char*)idPerson, sizeof(idPerson));
 			readFile.read((char*)name, sizeof(name));
 			readFile.read((char*)age, sizeof(age));
@@ -318,19 +318,19 @@ void recordFile::indexRecord(){ //funcion para los indices del registro
 	readFile.close();
 }
 
-void recordFile::buscarRecordArbol(int rrn){
-	char idPerson[10];
-	char name[32];
-	char age[4];
-	char country[32];
+void recordFile::buscarRecord(int rrn){
+	char id[12];
+	char name[40];
+	char age[40];
+	char country[12];
 	ifstream readFile(registryName.c_str(),ios::binary);	
-	readFile.seekg(HeaderSize + (sizeof(idPerson) + sizeof(name)+sizeof(age)+sizeof(country)) * rrn );
-	readFile.read((char*)idPerson, sizeof(idPerson));
+	readFile.seekg(HeaderSize + (sizeof(id) + sizeof(name)+sizeof(age)+sizeof(country)) * rrn );
+	readFile.read((char*)id, sizeof(id));
 	readFile.read((char*)name, sizeof(name));
 	readFile.read((char*)age, sizeof(age));
 	readFile.read((char*)country, sizeof(country));
 	printw("\n----------------------------------------------------------------------------\n");
-	printw("Id Persona: %s\n",idPerson);
+	printw("Id Persona: %s\n",id);
 	printw("Nombre: %s\n: ", name);
 	printw("Edad: %s\n: ", age);
 	printw("Pais: %s\n: ", country);	
@@ -625,10 +625,10 @@ void recordFile::setFlagTTRecords(bool flagTTRecord){
 }*/
 
 void recordFile::borrarRecord(long key/*, Arbol tree*/){
-	char name[32];
-	char idPerson[10];
-	char age[4];
-	char country[32];
+	char name[40];
+	char id[12];
+	char autor[40];
+	char id_editorial[12];
 	int position = getCurrPosition(indexRecordKey, key);
 	string rrn = indexRecordRRN.at(position);
 	int rrnInteger = atoi(rrn.c_str());
@@ -642,24 +642,23 @@ void recordFile::borrarRecord(long key/*, Arbol tree*/){
 	readFile.close();
 	ofstream writeFile(registryName.c_str(), ios::out | ios::in);
 	if(position != -1){
-		idPerson[0] = '*';
+		id[0] = '*';
 		rrnToString << rrnHeader;
 		for (int i = 0; i < rrnToString.str().size(); i++){
 			name[i] = rrnToString.str()[i];
 		}
 		if(atoi(rrn.c_str()) == recordNumber){
-			writeFile.seekp(HeaderSize + (atoi((rrn).c_str()) -1)*(sizeof(idPerson) + sizeof(name) +sizeof(age) + sizeof(age) + sizeof(country)));
+			writeFile.seekp(HeaderSize + (atoi((rrn).c_str()) -1)*(sizeof(id) + sizeof(name) +sizeof(autor)  + sizeof(autor) + sizeof(id_editorial)));
 		}else{
-			writeFile.seekp(HeaderSize + (atoi((rrn).c_str()))*(sizeof(idPerson) + sizeof(name) +sizeof(age) + sizeof(age) + sizeof(country)));
+			writeFile.seekp(HeaderSize + (atoi((rrn).c_str()))*(sizeof(id) + sizeof(name) +sizeof(autor) + sizeof(autor) + sizeof(id_editorial)));
 		}
-		writeFile.write(reinterpret_cast<char*>(&idPerson), sizeof(idPerson));
+		writeFile.write(reinterpret_cast<char*>(&id), sizeof(id));
 		writeFile.write(reinterpret_cast<char*>(&name), sizeof(name));
 		writeFile.seekp(0);
 		writeFile.seekp(sizeof(int));
 		writeFile.write(reinterpret_cast<char*>(&rrnInteger), sizeof(rrnInteger));
 		indexRecordKey.erase(indexRecordKey.begin() + position);
 		indexRecordRRN.erase(indexRecordRRN.begin()+position);
-		//tree.Eliminar(index((unsigned long)key, atoi(rrn.c_str())));
 		writeFile.close();
 	}
 }
